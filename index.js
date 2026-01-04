@@ -1,7 +1,7 @@
 // Import mongoose library
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://127.0.0.1:27017/test')
+mongoose.connect('mongodb://127.0.0.1:27017/test') // database name as test
   .then(() => console.log('Connected to MongoDB'))
   .catch((err) => console.error('Could not connect to MongoDB', err));
 
@@ -15,23 +15,51 @@ const userSchema = new mongoose.Schema({
     gender: String
 });
 
-// Model Creation
+// Model Creation (Table as users)
 const User = mongoose.model('User', userSchema);
 
 // Save document to MongoDB
 async function createUser() {
-    const user = new User({
-        name: 'Parag Dhali',
-        age: 30,
-        isMarried: false,
+
+    // Single User Creation
+    const user1 = new User({
+        name: 'Probodh Dhali',
+        age: 50,
+        isMarried: true,
         salary: 50000,
         gender: 'Male'
     });
+    await user1.save();
+    console.log('Single user Created:', user1);
 
-    // Save document to MongoDB
-    await user.save();
-    console.log('User Created:', user);
+
+    // Multiple Users Creation
+    const users = [
+        {
+            name: 'Parag Dhali',
+            age: 30,
+            isMarried: true,
+            salary: 50000,
+            gender: 'Male'
+        },
+        {
+            name: 'Charli Dhali Biswas',
+            age: 28,
+            isMarried: true,
+            salary: 45000,
+            gender: 'Female'
+        },
+        {
+            name: 'Priyanshu Dhali',
+            age: 3,
+            isMarried: false,
+            salary: 0,
+            gender: 'Male'
+        }
+    ];
+
+    const result = await User.insertMany(users);
+    console.log('Users Created:', result);
 }
 
-// Call the function to insert data
 createUser();
